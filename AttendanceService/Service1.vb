@@ -5,6 +5,8 @@ Imports System.Data
 Imports System.Timers
 Imports System.Windows.Forms
 Imports System.Security.Cryptography
+Imports System.Globalization
+
 Public Class Service1
 
     Dim mythread As Threading.Thread
@@ -237,7 +239,7 @@ Public Class Service1
         Try
             Dim objPublicKeyGenerator = New clsEncrypt.PublicKeyGenerator
             Dim objMyKeyPair = objPublicKeyGenerator.MakeKeyPair
-            objMyKeyPair.Publickey.key = strPublic
+            objMyKeyPair.PublicKey.Key = strPublic
             objMyKeyPair.PrivateKey.Key = strPrivate
             objPublicKeyGenerator = Nothing
             Dim objCryptographyFunctions = New clsEncrypt.CryptographyFunctions
@@ -479,8 +481,35 @@ Public Class Service1
                     'cmdTrans.CommandText = "Insert into Parallel (EmployeeCode,LogDateTime,Direction,SerialNumber)" &
                     '           "Values ('" & empcode & "','" & logdate & "','" & direct & "','" & sno & "')"
 
+
+
+                    Dim originalDateString As String = dataRow(logdate)
+                    Dim originalDateFormat As String = "dd/MM/yyyy hh:mm:ss tt"
+                    Dim originalDate_Format As String = "dd/MM/yyyy h:mm:ss tt"
+                    Dim desiredDateFormat As String = "MM/dd/yyyy hh:mm:ss tt"
+                    Dim desired_DateFormat As String = "yyyy-MM-dd hh:mm:ss tt"
+                    Dim desiredDateString As String
+                    desiredDateString = dataRow(logdate)
+                    ' Parse original string into DateTime object using original format
+                    Dim originalDateTime As DateTime
+                    If DateTime.TryParseExact(originalDateString, originalDateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, originalDateTime) Then
+                        ' Convert DateTime object back to string using desired format
+                        desiredDateString = originalDateTime.ToString(desiredDateFormat)
+                    Else
+                        'Console.WriteLine("Failed to parse original date string.")
+                    End If
+
+                    If DateTime.TryParseExact(originalDateString, originalDate_Format, CultureInfo.InvariantCulture, DateTimeStyles.None, originalDateTime) Then
+                        ' Convert DateTime object back to string using desired format
+                        desiredDateString = originalDateTime.ToString(desiredDateFormat)
+                    Else
+                        'Console.WriteLine("Failed to parse original date string.")
+                    End If
+
+                    desiredDateString = originalDateTime.ToString(desired_DateFormat)
+
                     cmdTrans.CommandText = "Insert into Parallel (EmployeeCode,LogDateTime,Direction,SerialNumber,Location)" &
-                    "Values ('" & dataRow(empcode) & "','" & dataRow(logdate) & "','" & dataRow(direct) & "','" & dataRow(sno) & "','" & dataRow(loc) & "')"
+                    "Values ('" & dataRow(empcode) & "','" & desiredDateString & "','" & dataRow(direct) & "','" & dataRow(sno) & "','" & dataRow(loc) & "')"
                     cmdTrans.ExecuteNonQuery()
                     cmdTrans.Dispose()
 
