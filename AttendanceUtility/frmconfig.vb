@@ -181,7 +181,7 @@ Public Class frmconfig
 
         cmbsrc.Items.Clear()
 
-        stblda = New SqlDataAdapter("SELECT table_name FROM information_schema.tables WHERE table_type = 'base table'", conSrcData)
+        stblda = New SqlDataAdapter("SELECT table_name FROM information_schema.tables WHERE table_type = 'base table' order by table_name", conSrcData)
         stblda.Fill(stbllist, "dsttbl")
 
         For i = 0 To stbllist.Tables(0).Rows.Count - 1
@@ -617,6 +617,7 @@ Public Class frmconfig
 
                     Dim originalDateString As String = dataRow(logdate)
                     Dim originalDateFormat As String = "dd/MM/yyyy hh:mm:ss tt"
+                    Dim originalDate_Format As String = "dd/MM/yyyy h:mm:ss tt"
                     Dim desiredDateFormat As String = "MM/dd/yyyy hh:mm:ss tt"
                     Dim desired_DateFormat As String = "yyyy-MM-dd hh:mm:ss tt"
                     Dim desiredDateString As String
@@ -631,6 +632,19 @@ Public Class frmconfig
                     Else
                         'Console.WriteLine("Failed to parse original date string.")
                     End If
+
+                    If DateTime.TryParseExact(originalDateString, originalDate_Format, CultureInfo.InvariantCulture, DateTimeStyles.None, originalDateTime) Then
+                        ' Convert DateTime object back to string using desired format
+                        desiredDateString = originalDateTime.ToString(desiredDateFormat)
+                        'MsgBox("Original date string: " & originalDateString)
+                        'Console.WriteLine("Desired date string: " & desiredDateString)
+                    Else
+                        'Console.WriteLine("Failed to parse original date string.")
+                    End If
+
+
+
+
                     desiredDateString = originalDateTime.ToString(desired_DateFormat)
                     'MsgBox("Insert into Parallel (EmployeeCode,LogDateTime,Direction,SerialNumber,Location)" &
                     '"Values ('" & dataRow(empcode) & "','" & desiredDateString & "','" & dataRow(direct) & "','" & dataRow(sno) & "','" & dataRow(loc) & "')")
