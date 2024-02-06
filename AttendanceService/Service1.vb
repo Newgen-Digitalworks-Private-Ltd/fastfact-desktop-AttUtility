@@ -478,38 +478,47 @@ Public Class Service1
                 cmdTrans.Connection = conDestData
                 Dim altstr As String
                 Try
-                    'cmdTrans.CommandText = "Insert into Parallel (EmployeeCode,LogDateTime,Direction,SerialNumber)" &
-                    '           "Values ('" & empcode & "','" & logdate & "','" & direct & "','" & sno & "')"
+                    ''cmdTrans.CommandText = "Insert into Parallel (EmployeeCode,LogDateTime,Direction,SerialNumber)" &
+                    ''           "Values ('" & empcode & "','" & logdate & "','" & direct & "','" & sno & "')"
 
 
 
-                    Dim originalDateString As String = dataRow(logdate)
-                    Dim originalDateFormat As String = "dd/MM/yyyy hh:mm:ss tt"
-                    Dim originalDate_Format As String = "dd/MM/yyyy h:mm:ss tt"
-                    Dim desiredDateFormat As String = "MM/dd/yyyy hh:mm:ss tt"
-                    Dim desired_DateFormat As String = "yyyy-MM-dd hh:mm:ss tt"
-                    Dim desiredDateString As String
-                    desiredDateString = dataRow(logdate)
-                    ' Parse original string into DateTime object using original format
-                    Dim originalDateTime As DateTime
-                    If DateTime.TryParseExact(originalDateString, originalDateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, originalDateTime) Then
-                        ' Convert DateTime object back to string using desired format
-                        desiredDateString = originalDateTime.ToString(desiredDateFormat)
-                    Else
-                        'Console.WriteLine("Failed to parse original date string.")
-                    End If
+                    'Dim originalDateString As String = dataRow(logdate)
+                    'Dim originalDateFormat As String = "dd/MM/yyyy hh:mm:ss tt"
+                    'Dim originalDate_Format As String = "dd/MM/yyyy h:mm:ss tt"
+                    'Dim desiredDateFormat As String = "MM/dd/yyyy hh:mm:ss tt"
+                    'Dim desired_DateFormat As String = "yyyy-MM-dd hh:mm:ss tt"
+                    'Dim desiredDateString As String
+                    'desiredDateString = dataRow(logdate)
+                    '' Parse original string into DateTime object using original format
+                    'Dim originalDateTime As DateTime
+                    'If DateTime.TryParseExact(originalDateString, originalDateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, originalDateTime) Then
+                    '    ' Convert DateTime object back to string using desired format
+                    '    desiredDateString = originalDateTime.ToString(desiredDateFormat)
+                    'Else
+                    '    'Console.WriteLine("Failed to parse original date string.")
+                    'End If
 
-                    If DateTime.TryParseExact(originalDateString, originalDate_Format, CultureInfo.InvariantCulture, DateTimeStyles.None, originalDateTime) Then
-                        ' Convert DateTime object back to string using desired format
-                        desiredDateString = originalDateTime.ToString(desiredDateFormat)
-                    Else
-                        'Console.WriteLine("Failed to parse original date string.")
-                    End If
+                    'If DateTime.TryParseExact(originalDateString, originalDate_Format, CultureInfo.InvariantCulture, DateTimeStyles.None, originalDateTime) Then
+                    '    ' Convert DateTime object back to string using desired format
+                    '    desiredDateString = originalDateTime.ToString(desiredDateFormat)
+                    'Else
+                    '    'Console.WriteLine("Failed to parse original date string.")
+                    'End If
 
-                    desiredDateString = originalDateTime.ToString(desired_DateFormat)
+                    'desiredDateString = originalDateTime.ToString(desired_DateFormat)
+
+                    'cmdTrans.CommandText = "Insert into Parallel (EmployeeCode,LogDateTime,Direction,SerialNumber,Location)" &
+                    '"Values ('" & dataRow(empcode) & "','" & desiredDateString & "','" & dataRow(direct) & "','" & dataRow(sno) & "','" & dataRow(loc) & "')"
+
+                    Dim formattedDate As String = CType(dataRow(logdate), DateTime).ToString("yyyy-MM-dd HH:mm:ss")
+
 
                     cmdTrans.CommandText = "Insert into Parallel (EmployeeCode,LogDateTime,Direction,SerialNumber,Location)" &
-                    "Values ('" & dataRow(empcode) & "','" & desiredDateString & "','" & dataRow(direct) & "','" & dataRow(sno) & "','" & dataRow(loc) & "')"
+                    "Values ('" & dataRow(empcode) & "','" & formattedDate & "','" & dataRow(direct) & "','" & dataRow(sno) & "','" & dataRow(loc) & "')"
+
+
+
                     cmdTrans.ExecuteNonQuery()
                     cmdTrans.Dispose()
 
